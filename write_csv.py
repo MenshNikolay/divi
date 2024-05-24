@@ -12,6 +12,7 @@ def save_to_csv(results, output_file):
     
     with open(output_file, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames,delimiter=',')
-        writer.writeheader()
+        if file.tell() == 0:
+            writer.writeheader()
         for result in results:
             writer.writerow(result)

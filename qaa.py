@@ -104,9 +104,12 @@ def quality_estimator(input_image, sdk_path, modification):
     '''
     io_dic = ioData.to_dict()
     
+    if io_dic is None:
+        print(f"Error: io_dic is None for input image {input_image}")
+        return
     
 
-    for obj in io_dic["objects"]:  # iteration over objects in io_dic
+    for obj in io_dic["objects"]:# iteration over objects in io_dic
         quality_params = obj["quality"]
         meta_data = {
             "filename": input_image,
@@ -142,7 +145,7 @@ def quality_estimator(input_image, sdk_path, modification):
             "watermark_score": quality_params["watermark_score"]
         }
         results.append(meta_data)
-        save_to_csv(results, "result.csv")
+    save_to_csv(results, "result.csv")
         
     '''
     Не требуется для пакетной обработки данных
