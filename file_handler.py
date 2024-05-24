@@ -8,3 +8,7 @@ def get_image_files(files_path):
             if file.lower().endswith(image_extensions):
                 image_files.append(os.path.join(root, file))
     return image_files
+    
+
+
+
