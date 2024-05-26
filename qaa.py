@@ -95,58 +95,59 @@ def quality_estimator(input_image, sdk_path, modification):
     for sample in samples:  # iteration over detected faces in ioData container
         ctx = sample.to_context()
         ioData["objects"].push_back(ctx)  # add results to ioData container
-
-    quality_block(ioData)  # call an estimator and pass a container with a cropped image
-    '''В данном блоке реализуется функционал по подготовке данных для записи в csv фай.
-       Применяется метод преобразования в стандартный тип данных для python, словарь.
-       нужно добавить название файла. название будет соответсвовать обсалютному пути файла,
-       это упростит его поиск при использовании большого датасета.
-    '''
-    io_dic = ioData.to_dict()
-    
-    if io_dic is None:
-        print(f"Error: io_dic is None for input image {input_image}")
-        return
-    
-
-    for obj in io_dic["objects"]:# iteration over objects in io_dic
-        quality_params = obj["quality"]
-        meta_data = {
-            "filename": input_image,
-            "confidence": obj["confidence"],
-            "total_score": quality_params["total_score"],
-            "is_sharp": quality_params["is_sharp"],
-            "background_uniformity_score": quality_params["background_uniformity_score"],
-            "dynamic_range_score": quality_params["dynamic_range_score"],
-            "eyes_distance": quality_params["eyes_distance"],
-            "has_watermark": quality_params["has_watermark"],
-            "illumination_score": quality_params["illumination_score"],
-            "is_background_uniform": quality_params["is_background_uniform"],
-            "is_dynamic_range_acceptable": quality_params["is_dynamic_range_acceptable"],
-            "is_evenly_illuminated": quality_params["is_evenly_illuminated"],
-            "is_eyes_distance_acceptable": quality_params["is_eyes_distance_acceptable"],
-            "is_left_eye_opened": quality_params["is_left_eye_opened"],
-            "is_margins_acceptable":quality_params["is_margins_acceptable"],
-            "is_neutral_emotion": quality_params["is_neutral_emotion"],
-            "is_not_noisy": quality_params["is_not_noisy"],
-            "is_right_eye_opened": quality_params["is_right_eye_opened"],
-            "is_rotation_acceptable": quality_params["is_rotation_acceptable"],
-            "left_eye_openness_score": quality_params["left_eye_openness_score"],
-            "margin_inner_deviation": quality_params["margin_inner_deviation"],
-            "margin_outer_deviation": quality_params["margin_outer_deviation"],
-            "max_rotation_deviation": quality_params["max_rotation_deviation"],
-            "neutral_emotion_score": quality_params["neutral_emotion_score"],
-            "no_flare": quality_params["no_flare"],
-            "noise_score": quality_params["noise_score"],
-            "not_masked": quality_params["not_masked"],
-            "not_masked_score": quality_params["not_masked_score"],
-            "right_eye_openness_score": quality_params["right_eye_openness_score"],
-            "sharpness_score": quality_params["sharpness_score"],
-            "watermark_score": quality_params["watermark_score"]
-        }
-        results.append(meta_data)
-    save_to_csv(results, "result.csv")
+    try:
+        quality_block(ioData)  # call an estimator and pass a container with a cropped image
+        '''В данном блоке реализуется функционал по подготовке данных для записи в csv фай.
+           Применяется метод преобразования в стандартный тип данных для python, словарь.
+           нужно добавить название файла. название будет соответсвовать обсалютному пути файла,
+           это упростит его поиск при использовании большого датасета.
+        '''
+        io_dic = ioData.to_dict()
         
+        if io_dic is None:
+            print(f"Error: io_dic is None for input image {input_image}")
+            return
+        
+    
+        for obj in io_dic["objects"]:# iteration over objects in io_dic
+            quality_params = obj["quality"]
+            meta_data = {
+                "filename": input_image,
+                "confidence": obj["confidence"],
+                "total_score": quality_params["total_score"],
+                "is_sharp": quality_params["is_sharp"],
+                "background_uniformity_score": quality_params["background_uniformity_score"],
+                "dynamic_range_score": quality_params["dynamic_range_score"],
+                "eyes_distance": quality_params["eyes_distance"],
+                "has_watermark": quality_params["has_watermark"],
+                "illumination_score": quality_params["illumination_score"],
+                "is_background_uniform": quality_params["is_background_uniform"],
+                "is_dynamic_range_acceptable": quality_params["is_dynamic_range_acceptable"],
+                "is_evenly_illuminated": quality_params["is_evenly_illuminated"],
+                "is_eyes_distance_acceptable": quality_params["is_eyes_distance_acceptable"],
+                "is_left_eye_opened": quality_params["is_left_eye_opened"],
+                "is_margins_acceptable":quality_params["is_margins_acceptable"],
+                "is_neutral_emotion": quality_params["is_neutral_emotion"],
+                "is_not_noisy": quality_params["is_not_noisy"],
+                "is_right_eye_opened": quality_params["is_right_eye_opened"],
+                "is_rotation_acceptable": quality_params["is_rotation_acceptable"],
+                "left_eye_openness_score": quality_params["left_eye_openness_score"],
+                "margin_inner_deviation": quality_params["margin_inner_deviation"],
+                "margin_outer_deviation": quality_params["margin_outer_deviation"],
+                "max_rotation_deviation": quality_params["max_rotation_deviation"],
+                "neutral_emotion_score": quality_params["neutral_emotion_score"],
+                "no_flare": quality_params["no_flare"],
+                "noise_score": quality_params["noise_score"],
+                "not_masked": quality_params["not_masked"],
+                "not_masked_score": quality_params["not_masked_score"],
+                "right_eye_openness_score": quality_params["right_eye_openness_score"],
+                "sharpness_score": quality_params["sharpness_score"],
+                "watermark_score": quality_params["watermark_score"]
+            }
+            results.append(meta_data)
+        save_to_csv(results, "result.csv")
+    except Exception as e:
+        print(f"Something wrong with this file {input_image}: {str(e)}"
     '''
     Не требуется для пакетной обработки данных
     cv2.imshow("result", picture)  # an example of a result image visualizing with opencv
